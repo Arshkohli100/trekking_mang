@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Booking History{% endblock %}
+{% block content %}
+<h3>Booking History</h3>
+<table class="table table-bordered">
+    <thead><tr><th>ID</th><th>Trek</th><th>Location</th><th>Start Date</th><th>End Date</th><th>Booking Date</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for b in bookings %}
+    <tr>
+        <td>{{ b.id }}</td>
+        <td>{{ b.trek_name }}</td>
+        <td>{{ b.location }}</td>
+        <td>{{ b.start_date }}</td>
+        <td>{{ b.end_date }}</td>
+        <td>{{ b.booking_date }}</td>
+        <td>{{ b.status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('user.dashboard') }}" class="btn btn-secondary">Back</a>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% block title %}Manage Treks{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Manage Treks</h3>
+    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addModal">Add Trek</button>
+</div>
+<form method="GET" class="mb-3">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search by name or ID">
+</form>
+<table class="table table-bordered">
+    <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Difficulty</th><th>Duration</th><th>Slots</th><th>Staff</th><th>Status</th><th>Dates</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for t in treks %}
+    <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.name }}</td>
+        <td>{{ t.location }}</td>
+        <td>{{ t.difficulty }}</td>
+        <td>{{ t.duration }}</td>
+        <td>{{ t.slots }}</td>
+        <td>
+            {% if t.staff_id %}
+                Staff #{{ t.staff_id }}
+            {% else %}
+                <span class="text-muted">None</span>
+            {% endif %}
+        </td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.start_date }} to {{ t.end_date }}</td>
+        <td>
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ t.id }}">Edit</button>
+            <button class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#assignModal{{ t.id }}">Assign</button>
+            <form method="POST" action="{{ url_for('admin.delete_trek', tid=t.id) }}" class="d-inline" onsubmit="return confirm('Delete this trek?')">
+                <button class="btn btn-sm btn-danger">Delete</button>
+            </form>
+        </td>
+    </tr>
+
+    <div class="modal fade" id="editModal{{ t.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('admin.edit_trek', tid=t.id) }}">
+                    <div class="modal-header"><h5 class="modal-title">Edit Trek</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <label>Name</label><input name="name" value="{{ t.name }}" class="form-control mb-2" required>
+                        <label>Location</label><input name="location" value="{{ t.location }}" class="form-control mb-2" required>
+                        <label>Difficulty</label>
+                        <select name="difficulty" class="form-control mb-2">
+                            <option {% if t.difficulty=='Easy' %}selected{% endif %}>Easy</option>
+                            <option {% if t.difficulty=='Moderate' %}selected{% endif %}>Moderate</option>
+                            <option {% if t.difficulty=='Hard' %}selected{% endif %}>Hard</option>
+                        </select>
+                        <label>Duration (days)</label><input type="number" name="duration" value="{{ t.duration }}" class="form-control mb-2" required>
+                        <label>Slots</label><input type="number" name="slots" value="{{ t.slots }}" class="form-control mb-2" required>
+                        <label>Start Date</label><input type="date" name="start_date" value="{{ t.start_date }}" class="form-control mb-2">
+                        <label>End Date</label><input type="date" name="end_date" value="{{ t.end_date }}" class="form-control mb-2">
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="assignModal{{ t.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('admin.assign_staff', tid=t.id) }}">
+                    <div class="modal-header"><h5 class="modal-title">Assign Staff</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <select name="staff_id" class="form-control">
+                            <option value="">None</option>
+                            {% for s in staff_list %}
+                            <option value="{{ s.id }}" {% if t.staff_id==s.id %}selected{% endif %}>{{ s.name }} (#{{ s.id }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary">Assign</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="modal fade" id="addModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="POST" action="{{ url_for('admin.add_trek') }}">
+                <div class="modal-header"><h5 class="modal-title">Add Trek</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                <div class="modal-body">
+                    <label>Name</label><input name="name" class="form-control mb-2" required>
+                    <label>Location</label><input name="location" class="form-control mb-2" required>
+                    <label>Difficulty</label>
+                    <select name="difficulty" class="form-control mb-2">
+                        <option>Easy</option><option>Moderate</option><option>Hard</option>
+                    </select>
+                    <label>Duration (days)</label><input type="number" name="duration" class="form-control mb-2" required>
+                    <label>Slots</label><input type="number" name="slots" class="form-control mb-2" required>
+                    <label>Staff</label>
+                    <select name="staff_id" class="form-control mb-2">
+                        <option value="">None</option>
+                        {% for s in staff_list %}
+                        <option value="{{ s.id }}">{{ s.name }} (#{{ s.id }})</option>
+                        {% endfor %}
+                    </select>
+                    <label>Status</label>
+                    <select name="status" class="form-control mb-2">
+                        <option>Pending</option><option>Approved</option><option>Open</option><option>Closed</option><option>Completed</option>
+                    </select>
+                    <label>Start Date</label><input type="date" name="start_date" class="form-control mb-2">
+                    <label>End Date</label><input type="date" name="end_date" class="form-control mb-2">
+                </div>
+                <div class="modal-footer"><button class="btn btn-primary">Add</button></div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

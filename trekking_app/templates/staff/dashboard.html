@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Staff Dashboard{% endblock %}
+{% block content %}
+<h3>Staff Dashboard</h3>
+{% if treks %}
+<table class="table table-bordered">
+    <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Slots</th><th>Status</th><th>Registered</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for t in treks %}
+    <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.name }}</td>
+        <td>{{ t.location }}</td>
+        <td>{{ t.slots }}</td>
+        <td>{{ t.status }}</td>
+        <td>{{ t.registered }}</td>
+        <td>
+            <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal{{ t.id }}">Update</button>
+            <a href="{{ url_for('staff.participants', tid=t.id) }}" class="btn btn-sm btn-info">Participants</a>
+        </td>
+    </tr>
+    <div class="modal fade" id="updateModal{{ t.id }}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="POST" action="{{ url_for('staff.update_trek', tid=t.id) }}">
+                    <div class="modal-header"><h5 class="modal-title">Update Trek</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+                    <div class="modal-body">
+                        <label>Available Slots</label><input type="number" name="slots" value="{{ t.slots }}" class="form-control mb-2" required>
+                        <label>Status</label>
+                        <select name="status" class="form-control">
+                            <option {% if t.status=='Pending' %}selected{% endif %}>Pending</option>
+                            <option {% if t.status=='Approved' %}selected{% endif %}>Approved</option>
+                            <option {% if t.status=='Open' %}selected{% endif %}>Open</option>
+                            <option {% if t.status=='Closed' %}selected{% endif %}>Closed</option>
+                            <option {% if t.status=='Completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer"><button class="btn btn-primary">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p class="text-muted">No treks assigned to you yet.</p>
+{% endif %}
+{% endblock %}

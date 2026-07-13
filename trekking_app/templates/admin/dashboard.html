@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h3>Admin Dashboard</h3>
+<div class="row mb-4">
+    <div class="col-md-3"><div class="card text-white bg-primary p-3"><h5>Treks</h5><h3>{{ treks }}</h3></div></div>
+    <div class="col-md-3"><div class="card text-white bg-success p-3"><h5>Users</h5><h3>{{ users }}</h3></div></div>
+    <div class="col-md-3"><div class="card text-white bg-warning p-3"><h5>Staff</h5><h3>{{ staff }}</h3></div></div>
+    <div class="col-md-3"><div class="card text-white bg-info p-3"><h5>Bookings</h5><h3>{{ bookings }}</h3></div></div>
+</div>
+<div class="list-group">
+    <a href="{{ url_for('admin.treks') }}" class="list-group-item list-group-item-action">Manage Treks</a>
+    <a href="{{ url_for('admin.staff') }}" class="list-group-item list-group-item-action">Manage Staff</a>
+    <a href="{{ url_for('admin.users') }}" class="list-group-item list-group-item-action">Manage Users</a>
+    <a href="{{ url_for('admin.bookings') }}" class="list-group-item list-group-item-action">View Bookings</a>
+</div>
+{% endblock %}

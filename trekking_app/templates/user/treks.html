@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Search Treks{% endblock %}
+{% block content %}
+<h3>Search Treks</h3>
+<form method="GET" class="row mb-3">
+    <div class="col-md-4">
+        <label>Difficulty</label>
+        <select name="difficulty" class="form-control">
+            <option value="">All</option>
+            <option {% if difficulty=='Easy' %}selected{% endif %}>Easy</option>
+            <option {% if difficulty=='Moderate' %}selected{% endif %}>Moderate</option>
+            <option {% if difficulty=='Hard' %}selected{% endif %}>Hard</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label>Location</label>
+        <input type="text" name="location" value="{{ location }}" class="form-control" placeholder="Location">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+        <button class="btn btn-primary">Filter</button>
+        <a href="{{ url_for('user.treks') }}" class="btn btn-secondary ms-2">Clear</a>
+    </div>
+</form>
+<table class="table table-bordered">
+    <thead><tr><th>ID</th><th>Name</th><th>Location</th><th>Difficulty</th><th>Duration</th><th>Slots</th><th>Start Date</th><th>Book</th></tr></thead>
+    <tbody>
+    {% for t in treks %}
+    <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.name }}</td>
+        <td>{{ t.location }}</td>
+        <td>{{ t.difficulty }}</td>
+        <td>{{ t.duration }}</td>
+        <td>{{ t.slots }}</td>
+        <td>{{ t.start_date }}</td>
+        <td>
+            <form method="POST" action="{{ url_for('user.book_trek', tid=t.id) }}">
+                <button class="btn btn-sm btn-success">Book</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+<a href="{{ url_for('user.dashboard') }}" class="btn btn-secondary">Back</a>
+{% endblock %}

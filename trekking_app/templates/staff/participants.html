@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Participants{% endblock %}
+{% block content %}
+<h3>Participants for {{ trek.name }}</h3>
+<a href="{{ url_for('staff.dashboard') }}" class="btn btn-secondary mb-3">Back</a>
+<table class="table table-bordered">
+    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Booking Date</th><th>Status</th></tr></thead>
+    <tbody>
+    {% for p in participants %}
+    <tr>
+        <td>{{ p.id }}</td>
+        <td>{{ p.name }}</td>
+        <td>{{ p.email }}</td>
+        <td>{{ p.booking_date }}</td>
+        <td>{{ p.status }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
