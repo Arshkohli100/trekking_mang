@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}Manage Staff{% endblock %}
+{% block back_button %}
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-sm mb-3">&larr; Back to Dashboard</a>
+{% endblock %}
 {% block content %}
 <h3>Manage Staff</h3>
 <form method="GET" class="mb-3">

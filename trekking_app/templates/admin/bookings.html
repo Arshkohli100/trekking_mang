@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {% block title %}All Bookings{% endblock %}
+{% block back_button %}
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-sm mb-3">&larr; Back to Dashboard</a>
+{% endblock %}
 {% block content %}
 <h3>All Bookings</h3>
 <table class="table table-bordered">
